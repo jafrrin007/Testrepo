@@ -54,7 +54,7 @@ pipeline {
         }
 
         stage('Push to Docker Hub (Prod)') {
-            when { expression { env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main' } }
+            when { expression { env.BRANCH_NAME == 'master' } }
             steps {
                 script {
                     echo "Pushing to production: ${env.BRANCH_NAME}"  // Debugging output
