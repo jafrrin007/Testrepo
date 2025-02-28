@@ -14,7 +14,11 @@ pipeline {
                 expression { BRANCH_NAME == 'dev' }
             }
             steps {
-                // ... (your Push to Dev logic)
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    sh 'docker tag react-app-web:latest jafrrin007/dev:latest'
+                    sh 'docker push jafrrin007/dev:latest'
+                }
             }
         }
         stage('Push to Prod') {
