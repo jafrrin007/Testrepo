@@ -12,7 +12,11 @@ pipeline {
             steps {
                 script {
                     // Clone the repo and set the BRANCH_NAME environment variable
+<<<<<<< HEAD
                     git branch: 'dev', credentialsId: 'github-token', url: env.GIT_REPO
+=======
+                    git credentialsId: 'github-token', url: env.GIT_REPO
+>>>>>>> eb6300e (Updated file)
                     env.BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
                     echo "Branch name: ${env.BRANCH_NAME}"  // Debugging output
                 }
@@ -47,6 +51,10 @@ pipeline {
             steps {
                 script {
                     // Push to Dev Docker Hub
+<<<<<<< HEAD
+=======
+                    echo "Pushing to development repository"
+>>>>>>> eb6300e (Updated file)
                     sh "docker push ${env.DOCKER_DEV_REPO}:latest"
                     sh "docker push ${env.DOCKER_DEV_REPO}:${env.COMMIT_HASH}"
                 }
@@ -73,6 +81,10 @@ pipeline {
     post {
         always {
             // Cleanup Docker login and prune old images
+<<<<<<< HEAD
+=======
+            echo "Cleaning up Docker images"
+>>>>>>> eb6300e (Updated file)
             sh 'docker logout'
             sh 'docker image prune -f'
         }
