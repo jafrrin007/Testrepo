@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        BRANCH_NAME = "${env.GIT_BRANCH}".replaceFirst("origin/", "") // Ensure correct branch detection
+        BRANCH_NAME = "${env.GIT_BRANCH}".replaceFirst("origin/", "")
     }
     stages {
         stage('Build') {
@@ -14,11 +14,7 @@ pipeline {
                 expression { BRANCH_NAME == 'dev' }
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"'
-                    sh 'docker tag devops-build-web:latest jafrrin007/dev:latest'
-                    sh 'docker push jafrrin007/dev:latest'
-                }
+                // ... (your Push to Dev logic)
             }
         }
         stage('Push to Prod') {
@@ -27,8 +23,8 @@ pipeline {
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"'
-                    sh 'docker tag devops-build-web:latest jafrrin007/prod:latest'
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    sh 'docker tag react-app-web:latest jafrrin007/prod:latest'
                     sh 'docker push jafrrin007/prod:latest'
                 }
             }
